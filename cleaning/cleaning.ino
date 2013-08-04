@@ -385,6 +385,6 @@ void loop() {
         // blink LED to indicate activity
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
-        blatta
+       //MORTE ALLA blatta!!!
     }
 }
