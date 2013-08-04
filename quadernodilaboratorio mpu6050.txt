@@ -43,4 +43,15 @@ usb lungo. Anche in questo caso la partenza è stata però praticamente immediat
 ma di un singolo dato! dopo di che si è bloccato per diversi secondi e si è sbloccato solo dopo ripetuti stimoli (movimenti).
 12.tentativo: Stessa procedura, questa volta non accennava a partire. E' partito solo durante lo spostamento dal tavolo al davanzale.
 13.tentativo: Di nuovo sul davanzale, solita prassi, solito risultato: partenza quasi immediata. Gli piace il davanzale.
+
+
+
+
+
+////////////*********/////////////////////NOTE SUGLI studi sui quaternioni & co.//////////////*****
+l'output a quaternioni genera in uscita delle onde sinusoidali apparentemente insensate, che però sembrano cambiare leggermente, almeno in ampiezza con il segnale.
+la maggior parte delle funzioni dell'mpu,(get gravity, ecc..) usa i quaternioni e calcola il resto usandoli. 
+Questo fa si che anche ad esempio l'output che dovrebbe dare la direzione attuale della gravità come vettore oscilli apparentemente insensatamente. In verità no. 
+In verità basta avere pazienza e le oscillazioni si smorzano, fino ad arrivare quasi ad un output costante. Rotazioni ecc dell'aggeggo poi però fanno riprendere ques
+te oscillazioni, devo ancora studiare bene come.
   
