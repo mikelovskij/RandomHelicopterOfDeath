@@ -1,0 +1,46 @@
+Informazioni raccolte sull'mpu 6050 con dmp	
+
+tutte le componenti dell'output quaternionico continuano ad oscillare sinusoidalmente, sembrano quasi indipendenti dai movimenti ma in realtà no, 
+pare infatti che muovendo l'mpu cambi l'ampiezza ti ale output. Non ho capito bene come. Gli altri tipi di output sono spesso e volentieri influenzati da tale
+output e risultano quindi un po' insensati. 
+
+L'output con semplice accelerazione e giroscopiazione sembra invece sensato, anche usando la fifo. 
+
+Per quanto riguarda la fifo, una volta fatto partire il programma, va in attesa del primo interrupt... che a volte pare non voler più venire,forse perchè l'mpu 
+resta in una specie di standby fino a che non vede dei movimenti seri. Necessaria ulteriore investigazione. Il primo interrupt arriva in genere assieme ad un fifo
+overflow, cioè quando la fifo è piena in teoria. Quanto ci mette a riempirsi? quanto è il ritardo con cui arrivano i dati? Non sembra molto, ma una volta che è partito
+i dati arrivano ogni circa 9-12 ms. Questo corrisponde ad una sampling freq di circa 100Hz. 
+Sarebbe anche utile collegare il pin dell'interrupt ad un oscilloscopio per vedere effettivamente quanti interrupts arrivano e quanto spesso e quanti dati porta
+ognuno di questi interrupts.
+Potrebbe essere un'idea anche il comparare i dati in uscita dall'acquisizione diretta (senza fifo) e quelli con la fifo.
+
+Come mai i dati, specialmente quelli del giroscopio, sono così approssimati? Non erano vettori a 16 bits una volta? Colpa del filtro passa-alto?
+
+
+Ulteriori studi sul primo interrupt:(reset dell'arduino e del serial monitor fra ogni tentativo).
+1.tentativo: apparente quasi contemporaneità con una vibrazione provocata dal mio dito e l'inizio della trasmissione, circa 3-4 secondi dopo il caricamento del dmp
+2.tentativo: comportamento completamente diverso rispetto al primo tentativo: diversi stimoli non hanno provocato nessuna risposta immediata. sono stati necessari 
+riptetuti tentativi e circa 10 secondi prima che partisse la trasmissione. 
+3.tentativo: numerosi movimenti prima dell'attivazione della dmp, per provare se l'entata in "standby" dipendesse anche dalla staticità precedente al segnale di attivazione.
+Non sembra abbiano aiutato. una vibrazione sul tavolo non ha prodotto risultati per almeno 12-13 secondi. un sucessivo lievissimo spostamento laterale del blocco ha 
+immediatamente attivato la trasmissione. Possibile casualità di questa coincidenza.
+4.tentativo: tentati spostamenti laterali da diverse direzioni, simili a quelli del terzo tentativo, a circa 10-12 secondi uno dall'altro. Dopo circa 10 secondi dal terzo 
+spostamento è partito. 
+5.tentativo: due spostamenti a breve distanza (1 secondo circa)  nella stessa direzione hanno (forse) portato alla sua attivazione dopo circa 2-3 secondi? Qual'è il 
+campionamento durante lo standby? E' necessario produrre dei movimenti che durino un tot per provocarne l'uscita o è solo una questione di beccare il momento giusto?
+O è completamente random? 
+6.tentativo: usato cavo usb più lungo e posizionato sensore (e arduino) su davanzale di marmo, teoricamente più stabile. inoltre il cavo è stato fermato da una roccia
+in modo da evitare trasmissione di vibrazioni dal computer al sensore. Nonostante ciò la trasmissione è partita quasi istantaneamente dopo l'attivazione de dmp. Forse
+è tutto random e basta, e non dipende dalle vibrazioni. Boh.
+7.tentativo: stessa procedura e stesso risultato del 6. Da notare che il reset lo ha mosso, qualche secondo prima dell'attivazione del dmp però. 
+8.tentativo: idem. Forse il dmp cerca invece stabilità, in modo da poter settare la posizione iniziale come zero. 
+9.tentativo: tentato di effettuare il reset in modo più stabile possibile, mettendo un pezzo di carta fra l'arduino e il marmo in modo da attutire le vibrazioni. 
+   inoltre, dal reset è stato atteso circa un minuto prima di attivare il serial monitor e, immediatamente dopo, il dmp. Nonostante ciò, partenza quasi
+   immediata come negli ultimi tentativi. Forse sarebbe utile provare l'output quaternionico in queste condizioni.
+10.tentativo: per verificare che la cosa non dipendesse solamente dal cambio di cavo ho rimesso l'arduino e il sensore sulla scrivanina, mantenendo però il cavo 
+usb lungo. Anche in questo caso la partenza è stata però praticamente immediata. Bella storia. 
+11.tentativo: stessa procedura e condizioni del 10, questa volta però c'è stato un comportamento anomalo: all'attivazione del dmp è seguito una trasmissione quasi istantanea
+ma di un singolo dato! dopo di che si è bloccato per diversi secondi e si è sbloccato solo dopo ripetuti stimoli (movimenti).
+12.tentativo: Stessa procedura, questa volta non accennava a partire. E' partito solo durante lo spostamento dal tavolo al davanzale.
+13.tentativo: Di nuovo sul davanzale, solita prassi, solito risultato: partenza quasi immediata. Gli piace il davanzale.
+  
