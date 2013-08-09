@@ -74,7 +74,6 @@ MPU6050 mpu;
    http://code.google.com/p/arduino/issues/detail?id=958
  * ========================================================================= */
 
-#define OUTPUT_MICHELIANO
 
 
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
@@ -82,11 +81,13 @@ MPU6050 mpu;
 #define DEBUG_2 7 //è possibile controllare questi multipli outputs con una singola variabile magari? tipo un numero a 6 bits che controlla un led per bit?
 #define DEBUG_3 8//sì, ma solo col solito orribile metodo del bitshifting ecc... putost che'n tost... per ora però forse nonserve
 #define DEBUG_4 9
-#define DEBUG_5 10
+#define DEBUG_5 10//probabilmente alcuni di questi leds andranno tolti a favore di altri output più necessari. 
 #define DEBUG_6 11
+
+
 bool blinkState = false;
 
-// MPU control/status vars
+//////////////////////////////// MPU control/status vars (QUESTE VARIABILI SERVONO PER COMUNICARE CON L'MPU6050)/////////////////////////////////////////////////////////////
 bool dmpReady = false;  // set true if DMP init was successful
 uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
 uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
@@ -94,9 +95,19 @@ uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
 uint16_t fifoCount;     // count of all bytes currently in FIFO
 uint8_t fifoBuffer[64]; // FIFO storage buffer
 
-// orientation/motion vars
+////////////////////// orientation/motion vars QUESTE DUE VARUABILI CONTENGONO I DATI LETTI DAL GIROACCELEROMETRO, PRIMA DI ESSERE FILTRATI//////////////////////////////////
 VectorInt16 aa;         // [x, y, z]            accel sensor measurements
 VectorInt16 gg;
+
+///////////////////////////////////////////queste variabili sono invece il risultato del filtraggio e dovrebbero essere usate dai feedbacks ////////////////////////////////////
+int ax;
+int ay;
+int az;
+int gx;
+int gy;
+int gz;
+
+
 
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
@@ -109,9 +120,9 @@ void dmpDataReady() {
 
 
 
-// ================================================================
-// ===                      INITIAL SETUP                       ===
-// ================================================================
+// ======================================================================================================================================================================
+// ===                      INITIAL SETUP INSERITE IN QUESTA SEZIONE EVENTUALI COSE DA FARE ALL'ACCENSIONE DEL DISPOSITIVO, POSSIBILMENTE IN FONDO                  ===
+// ======================================================================================================================================================================
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -120,7 +131,7 @@ void setup() {
     // initialize serial communication
     // (115200 chosen because it is required for Teapot Demo output, but it's
     // really up to you depending on your project)
-    Serial.begin(115200);//OVVIAMENTE LA COMUNICAZIONE SERIAL USB NON SERVIRà NEL COSO FINALE.
+    Serial.begin(115200);//OVVIAMENTE LA COMUNICAZIONE SERIAL USB NON SERVIRà NEL COSO FINALE, MA PUò ESSERE LASCIATA, MAGARI COMMENTATA, PER EVENTUALE DEBUGGING
     while (!Serial); // wait for Leonardo enumeration, others continue immediately
 
     // NOTE: 8MHz or slower host processors, like the Teensy @ 3.3v or Ardunio
@@ -237,9 +248,10 @@ void loop() {
         // (this lets us immediately read more without waiting for an interrupt)
         fifoCount -= packetSize;
         digitalWrite(DEBUG_3,false);            
-         #ifdef OUTPUT_MICHELIANO   
+
             mpu.dmpGetGyro(&gg, fifoBuffer) ;  
             mpu.dmpGetAccel(&aa, fifoBuffer);
+            
             Serial.print(millis());
             Serial.print("a\t");
             Serial.print(aa.x);
@@ -253,7 +265,7 @@ void loop() {
             Serial.print(gg.y);
             Serial.print("\t");
             Serial.println(gg.z);
-        #endif
+
          // blink LED to indicate activity
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
