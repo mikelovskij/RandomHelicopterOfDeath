@@ -95,18 +95,25 @@ uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
 uint16_t fifoCount;     // count of all bytes currently in FIFO
 uint8_t fifoBuffer[64]; // FIFO storage buffer
 
-////////////////////// orientation/motion vars QUESTE DUE VARUABILI CONTENGONO I DATI LETTI DAL GIROACCELEROMETRO, PRIMA DI ESSERE FILTRATI//////////////////////////////////
+//////// orientation/motion vars QUESTE DUE VARUABILI CONTENGONO I DATI LETTI DAL GIROACCELEROMETRO, PRIMA DI ESSERE FILTRATI, e altre variabili utili al filtro////////////////
 VectorInt16 aa;         // [x, y, z]            accel sensor measurements
 VectorInt16 gg;
+long aaxpart=0;
+long aaypart=0;
+long aazpart=0;
+int f=0;
+#define lp 64 //NUMERO DI NUMERI SU CUI FARE LA MEDIA QUANDO SI PASSABASSA
+#define arr 6 // LA POTENZA DI DUE PER LA QUALE VIENE DIVISO IL DATO DOPO LA SOMMA, NEL FAR LA MEDIA. PER ORA è ALTO SOLO PER COMODITà.
 
 ///////////////////////////////////////////queste variabili sono invece il risultato del filtraggio e dovrebbero essere usate dai feedbacks ////////////////////////////////////
-int ax;
-int ay;
-int az;
+int aax;
+int aay;
+int aaz;
 int gx;
 int gy;
 int gz;
 
+///////////////////VARIABILI COMANDO: QUESTE VARIABILI DOVREBBERO ESSERE GESTITE DAL MODULO RADIORICEVITORE/DA QUALCHE PULSANTE MANUALE E GESTIRE LE VARIE FUNZIONI////////////
 
 
 // ================================================================
@@ -154,7 +161,7 @@ void setup() {
     // verify connection
     Serial.println(F("Testing device connections..."));
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
-    mpu.testConnection() ? digitalWrite(DEBUG_1,true) : digitalWrite(DEBUG_1,false)                                //IL PRIMO LED MOSTRA SE SI RIESCE A COMUNICARE CON L'MPU
+    mpu.testConnection() ? digitalWrite(DEBUG_1,true) : digitalWrite(DEBUG_1,false);                                //IL PRIMO LED MOSTRA SE SI RIESCE A COMUNICARE CON L'MPU
     // wait for ready
     Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
@@ -200,9 +207,9 @@ void setup() {
 
 
 
-// ================================================================
-// ===                    MAIN PROGRAM LOOP                     ===
-// ================================================================
+// =======================================================================================================================================
+// ===                    MAIN PROGRAM LOOP QUESTA è LA PARTE CHE VIENE INVECE RIPETUTA DI CONTINUO DAL PROCESSORE.                    ===
+// =======================================================================================================================================
 
 void loop() {
     // if programming failed, don't try to do anything
@@ -210,6 +217,7 @@ void loop() {
 
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && fifoCount < packetSize) {
+       
         // other program behavior stuff here
         // .
         // .QUA VA INSERITO TUTTO IL RESTO DEL PROGRAMMA IN TEORIA, E VIENE ESEGUITO MENTRE IL PROCESSORE NON è OCCUPATO DALLA TRASMISSIONE I2C CON IL GIROSCOPIO
@@ -217,9 +225,8 @@ void loop() {
         // if you are really paranoid you can frequently test in between other
         // stuff to see if mpuInterrupt is true, and if so, "break;" from the
         // while() loop to immediately process the MPU data
-        // .
-        // .
-        // .
+
+     // for()
     }
 
     // reset interrupt flag and get INT_STATUS byte
@@ -234,7 +241,7 @@ void loop() {
         // reset so we can continue cleanly
         mpu.resetFIFO();
         Serial.println(F("FIFO overflow!"));
-        digitalWrite(DEBUG_3,true);                                                                  IL TERZO LED SI ACCENDE IN CASO DI OVERFLOW DELLA FIFO. 
+        digitalWrite(DEBUG_3,true);                                                 //                 IL TERZO LED SI ACCENDE IN CASO DI OVERFLOW DELLA FIFO. 
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
     } else if (mpuIntStatus & 0x02) {
@@ -251,7 +258,23 @@ void loop() {
 
             mpu.dmpGetGyro(&gg, fifoBuffer) ;  
             mpu.dmpGetAccel(&aa, fifoBuffer);
-            
+ /////////////////////////////FILTRAGGIO BASE DELL'ACCELERAZIONE CON UNA BANALE MEDIA. C'E' DECISAMENTE SPAZIO PER MIGLIORARE QUA////////////////////////////////         
+   if (f<lp){
+     aaxpart=aaxpart+aa.x; 
+     aaypart=aaypart+aa.y;
+     aazpart=aazpart+aa.z;
+     f++;
+   }
+   else{
+     aax=aaxpart>>arr;
+     aay=aaypart>>arr;
+     aaz=aazpart>>arr;
+     aaxpart=0;
+     aaypart=0;
+     aazpart=0;
+     f=0;
+   }
+ ///trasmissione dei dati cheserve controllare alla seriale///////////////////         
             Serial.print(millis());
             Serial.print("a\t");
             Serial.print(aa.x);
@@ -259,6 +282,12 @@ void loop() {
             Serial.print(aa.y);
             Serial.print("\t");
             Serial.print(aa.z);
+            Serial.print("\t");
+            Serial.print(aax);
+            Serial.print("\t");
+            Serial.print(aay);
+            Serial.print("\t");
+            Serial.print(aaz);
              Serial.print("\tg\t");
             Serial.print(gg.x);
             Serial.print("\t");
@@ -266,10 +295,8 @@ void loop() {
             Serial.print("\t");
             Serial.println(gg.z);
 
-         // blink LED to indicate activity
+         // blink LED to indicate activity INUTILE LED LAMPEGGIOSO///////////////
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
-       //MORTE ALLA blatta!!!
-	   //tum tum tum tum tum tum!ghgh
     }
 }
