@@ -76,13 +76,13 @@ MPU6050 mpu;
 
 
 
-#define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
-#define DEBUG_1 6 //AGGIUNTI QUESTI OUTPUTS PER COLLEGARE LEDS DI CONTROLLO DELLE VARIE OPERAZIONI.
-#define DEBUG_2 7 //è possibile controllare questi multipli outputs con una singola variabile magari? tipo un numero a 6 bits che controlla un led per bit?
-#define DEBUG_3 8//sì, ma solo col solito orribile metodo del bitshifting ecc... putost che'n tost... per ora però forse nonserve
-#define DEBUG_4 9
-#define DEBUG_5 10//probabilmente alcuni di questi leds andranno tolti a favore di altri output più necessari. 
-#define DEBUG_6 11
+
+#define DEBUG_1 8 //AGGIUNTI QUESTI OUTPUTS PER COLLEGARE LEDS DI CONTROLLO DELLE VARIE OPERAZIONI.
+#define DEBUG_2 9 //è possibile controllare questi multipli outputs con una singola variabile magari? tipo un numero a 6 bits che controlla un led per bit?
+#define DEBUG_3 10//sì, ma solo col solito orribile metodo del bitshifting ecc... putost che'n tost... per ora però forse nonserve
+#define DEBUG_4 11
+#define DEBUG_5 12//probabilmente alcuni di questi leds andranno tolti a favore di altri output più necessari. 
+#define DEBUG_6 13
 
 
 bool blinkState = false;
@@ -199,10 +199,6 @@ void setup() {
         Serial.print(devStatus);
         Serial.println(F(")"));
     }
-
-    // configure LED for output AGGIUNTI I LED DI DEBUG PRIMA PERCHè SERVONO PRIMA
-    pinMode(LED_PIN, OUTPUT);
-   
 }
 
 
@@ -288,15 +284,13 @@ void loop() {
             Serial.print(aay);
             Serial.print("\t");
             Serial.print(aaz);
-             Serial.print("\tg\t");
-            Serial.print(gg.x);
-            Serial.print("\t");
-            Serial.print(gg.y);
-            Serial.print("\t");
-            Serial.println(gg.z);
+           //  Serial.print("\tg\t");
+           // Serial.print(gg.x);
+           // Serial.print("\t");
+           // Serial.print(gg.y);
+            //Serial.print("\t");
+            //Serial.println(gg.z);
 
-         // blink LED to indicate activity INUTILE LED LAMPEGGIOSO///////////////
-        blinkState = !blinkState;
-        digitalWrite(LED_PIN, blinkState);
+     
     }
 }
