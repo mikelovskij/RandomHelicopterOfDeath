@@ -212,7 +212,7 @@ void loop() {
     if (!dmpReady) return;
 
     // wait for MPU interrupt or extra packet(s) available
-    while (!mpuInterrupt && fifoCount < packetSize) {
+    while (!mpuInterrupt && (fifoCount < packetSize)) {
        
         // other program behavior stuff here
         // .
@@ -223,8 +223,9 @@ void loop() {
         // while() loop to immediately process the MPU data
 
      // for()
+     digitalWrite(DEBUG_6,true);   
     }
-
+    digitalWrite(DEBUG_6,false);  
     // reset interrupt flag and get INT_STATUS byte
     mpuInterrupt = false;
     mpuIntStatus = mpu.getIntStatus();
@@ -233,7 +234,7 @@ void loop() {
     fifoCount = mpu.getFIFOCount();
 
     // check for overflow (this should never happen unless our code is too inefficient)
-    if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
+    if ((mpuIntStatus & 0x10) || (fifoCount == 1024)) {
         // reset so we can continue cleanly
         mpu.resetFIFO();
         Serial.println(F("FIFO overflow!"));
@@ -269,28 +270,28 @@ void loop() {
      aaypart=0;
      aazpart=0;
      f=0;
-   }
+   
  ///trasmissione dei dati cheserve controllare alla seriale///////////////////         
             Serial.print(millis());
-            Serial.print("a\t");
-            Serial.print(aa.x);
-            Serial.print("\t");
-            Serial.print(aa.y);
-            Serial.print("\t");
-            Serial.print(aa.z);
-            Serial.print("\t");
+            Serial.print("\t a\t");
+          //  Serial.print(aa.x);
+          //  Serial.print("\t");
+           // Serial.print(aa.y);
+           // Serial.print("\t");
+          //  Serial.print(aa.z);
+          //  Serial.print("\t");
             Serial.print(aax);
             Serial.print("\t");
             Serial.print(aay);
             Serial.print("\t");
-            Serial.print(aaz);
-           //  Serial.print("\tg\t");
+            Serial.println(aaz);
+           // Serial.print("\tg\t");
            // Serial.print(gg.x);
            // Serial.print("\t");
            // Serial.print(gg.y);
             //Serial.print("\t");
             //Serial.println(gg.z);
 
-     
+   }
     }
 }
