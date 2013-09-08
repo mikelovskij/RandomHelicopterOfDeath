@@ -113,7 +113,21 @@ int gx;
 int gy;
 int gz;
 
-///////////////////VARIABILI COMANDO: QUESTE VARIABILI DOVREBBERO ESSERE GESTITE DAL MODULO RADIORICEVITORE/DA QUALCHE PULSANTE MANUALE E GESTIRE LE VARIE FUNZIONI////////////
+///////////////////VARIABILI TELECOMANDO: QUESTE VARIABILI DOVREBBERO ESSERE GESTITE DAL MODULO RADIORICEVITORE/DA QUALCHE PULSANTE MANUALE E GESTIRE LE VARIE FUNZIONI////////////
+//OVVIAMENTE TUTTE STE COSE SONO IDEE E INDICAZIONI, MODIFICATELE A SECONDA DELLE NECESSITà.
+int updwn;  //SALITA E DISCESA, POSSIBILMENTE ANALOGICO, POSITIVO PER SALITA E NEGATIVO PER DISCESA
+int rotz; //ROTAZIONI ATTORNO ALL'ASSE Z. POTREBBE ESSERE 1 0 E -1 IN BASE AL PULSANTE PREMUTO, NON CREDO CHE SERVA ANALOGICO
+int avantindietr; //AVANTI E INDIETRO, FA UN PO' SCHIFO AVERLO SULLA STESSA LEVA DEL SUGIù MA CREDO CHE L'IDEALE SIA AVERLO ANALOGICO
+int dxsx; //TRASLAZIONI DX E SX, SE PROPRIO SERVONO. POTREMO INIZIALMENTE TRALASCIARLE VISTO CHE TEMO SIANO LE PIù DIFFICILI DA IMPLEMENTARE (CMQ ABB SEMPLICI IN TEORIA)
+int standby=1; // IN MODALITà STANBY I MOTORI VENGONO SPENTI, E ANCHE I FEEDBACKS.
+int warmup; // METTE I MOTORI A VELOCITà BASSA (NON FORZATAMENTE) E ACCENDE I FEEDBACKS (CHE DOVREBBERO IMPEDIRE DI PRECIPITARE). SE FATTO MENTRE VOLA NON DOVREBBE AVERE EFFETTO, A PARE IL DISINSERIRE I COMANDI DEL TELECOMANDO.
+int aux1; // comando ausiliaro 1, ad esempio sgancia le bombe atomiche
+int aux2; //etc...
+int aiwar; //disattiva i feedbacks, utile forse per il debugging ma pericoloso.
+
+
+
+
 
 
 // ================================================================
@@ -208,73 +222,76 @@ void setup() {
 // =======================================================================================================================================
 
 void loop() {
-    // if programming failed, don't try to do anything
-    if (!dmpReady) return;
-
+// if programming failed, don't try to do anything
+	if (!dmpReady)  return;
+   
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && (fifoCount < packetSize)) {
        
         // other program behavior stuff here
-        // .
+        // ==========================================================================================================================================
         // .QUA VA INSERITO TUTTO IL RESTO DEL PROGRAMMA IN TEORIA, E VIENE ESEGUITO MENTRE IL PROCESSORE NON è OCCUPATO DALLA TRASMISSIONE I2C CON IL GIROSCOPIO
-        // .
+        // =============================================================================================================================================
         // if you are really paranoid you can frequently test in between other
         // stuff to see if mpuInterrupt is true, and if so, "break;" from the
         // while() loop to immediately process the MPU data
 
-     // for()
-     digitalWrite(DEBUG_6,true);   
-    }
-    digitalWrite(DEBUG_6,false);  
+		// for()
+		// Serial.print("blurb"); //cose per verificare se si entra nel ciclo o no. ora pare funziare
+		digitalWrite(DEBUG_6,HIGH);    //anche questo è per vedere se entra mai in questo ciclo. se lampeggia tutto è ok.  
+	}
+    digitalWrite(DEBUG_6,LOW);  
     // reset interrupt flag and get INT_STATUS byte
     mpuInterrupt = false;
     mpuIntStatus = mpu.getIntStatus();
-
+    //Serial.println(mpuIntStatus);
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
 
+    Serial.println(fifoCount);//PER VERIFICARE LO SPAZIO OCCUPATO IN MEMORIA. 
     // check for overflow (this should never happen unless our code is too inefficient)
     if ((mpuIntStatus & 0x10) || (fifoCount == 1024)) {
         // reset so we can continue cleanly
         mpu.resetFIFO();
         Serial.println(F("FIFO overflow!"));
-        digitalWrite(DEBUG_3,true);                                                 //                 IL TERZO LED SI ACCENDE IN CASO DI OVERFLOW DELLA FIFO. 
+        digitalWrite(DEBUG_3,HIGH);                                                 //                 IL TERZO LED SI ACCENDE IN CASO DI OVERFLOW DELLA FIFO. 
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
-    } else if (mpuIntStatus & 0x02) {
+    } else if (mpuIntStatus & 0x01) {
         // wait for correct available data length, should be a VERY short wait
         while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
         // read a packet from FIFO
         mpu.getFIFOBytes(fifoBuffer, packetSize);
-        
+		//   mpu.getFIFOBytes(fifoBuffer, packetSize);//AGGIUNTA UNA SECONDA LETTURA PER PROVARE A SVUOTARE LA FIFO, SOLUZIONE BALORDA CHIARAMENTE.funziona!!!adessofunziaanchesenza
         // track FIFO count here in case there is > 1 packet available
         // (this lets us immediately read more without waiting for an interrupt)
         fifoCount -= packetSize;
-        digitalWrite(DEBUG_3,false);            
+        digitalWrite(DEBUG_3,LOW);            
 
-            mpu.dmpGetGyro(&gg, fifoBuffer) ;  
-            mpu.dmpGetAccel(&aa, fifoBuffer);
+		mpu.dmpGetGyro(&gg, fifoBuffer) ;  
+		mpu.dmpGetAccel(&aa, fifoBuffer);
  /////////////////////////////FILTRAGGIO BASE DELL'ACCELERAZIONE CON UNA BANALE MEDIA. C'E' DECISAMENTE SPAZIO PER MIGLIORARE QUA////////////////////////////////         
-   if (f<lp){
-     aaxpart=aaxpart+aa.x; 
-     aaypart=aaypart+aa.y;
-     aazpart=aazpart+aa.z;
-     f++;
-   }
-   else{
-     aax=aaxpart>>arr;
-     aay=aaypart>>arr;
-     aaz=aazpart>>arr;
-     aaxpart=0;
-     aaypart=0;
-     aazpart=0;
-     f=0;
-   
- ///trasmissione dei dati cheserve controllare alla seriale///////////////////         
+		if (f<lp){
+			aaxpart=aaxpart+aa.x; 
+			aaypart=aaypart+aa.y;
+			aazpart=aazpart+aa.z;
+			f++;
+		}
+		else{
+			aax=aaxpart>>arr;
+			aay=aaypart>>arr;
+			aaz=aazpart>>arr;
+			aaxpart=0;
+			aaypart=0;
+			aazpart=0;
+			f=0;   
+ ////trasmissione dei dati cheserve controllare alla seriale///////////////////         
             Serial.print(millis());
-            Serial.print("\t a\t");
-          //  Serial.print(aa.x);
+            Serial.print("\t");
+          //  Serial.print(fifoCount);
+            Serial.print("\t a \t");
+           // Serial.print(aa.x);
           //  Serial.print("\t");
            // Serial.print(aa.y);
            // Serial.print("\t");
@@ -291,7 +308,6 @@ void loop() {
            // Serial.print(gg.y);
             //Serial.print("\t");
             //Serial.println(gg.z);
-
-   }
+		}
     }
 }
