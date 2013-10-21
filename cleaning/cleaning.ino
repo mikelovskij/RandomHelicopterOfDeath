@@ -48,6 +48,7 @@ THE SOFTWARE.
 #include "I2Cdev.h"
 
 #include "MPU6050_6Axis_MotionApps20.h"
+#include <Servo.h> 
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
 // class default I2C address is 0x68
@@ -55,7 +56,7 @@ THE SOFTWARE.
 // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
 // AD0 high = 0x69
 MPU6050 mpu;
-
+Servo myservo;
 /* =========================================================================
    NOTE: In addition to connection 3.3v, GND, SDA, and SCL, this sketch
    depends on the MPU-6050's INT pin being connected to the Arduino's
@@ -126,9 +127,14 @@ int aux2; //etc...
 int aiwar; //disattiva i feedbacks, utile forse per il debugging ma pericoloso.
 
 
-
-
-
+/////////////// debug e prove//////////////////////////////
+int servcount =0;
+bool logic ;
+bool drive ;
+bool latch ;
+bool lclear;
+	
+uint8_t	intenableds;
 
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
@@ -177,6 +183,8 @@ void setup() {
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
     mpu.testConnection() ? digitalWrite(DEBUG_1,true) : digitalWrite(DEBUG_1,false);                                //IL PRIMO LED MOSTRA SE SI RIESCE A COMUNICARE CON L'MPU
     // wait for ready
+    
+    
     Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
     while (!Serial.available());                 // wait for data                                                  //DA SOSTITUIRE CON UN SEMPLICE DELAY O CON UNA VARIABILE CONTROLLATA DA TELECOM O BOTTONE
@@ -184,8 +192,31 @@ void setup() {
 
     // load and configure the DMP
     Serial.println(F("Initializing DMP..."));
-    devStatus = mpu.dmpInitialize();
-    
+   //questa parte mi serve per studiare e modificare la configuraz dell'interrupt	
+        mpu.dmpInitialize();
+      //  mpu.setInterruptMode(0);
+       // mpu.setInterruptDrive(0); //sto comando setta l'interrupt in modalità open-drain se per caso va meglio così.
+       // mpu.setInterruptLatch(0);
+	logic = mpu.getInterruptMode(); //0 logica positiva,  1 logica negativa 
+	drive = mpu.getInterruptDrive();// 0 push-pull , 1 open-drain
+	latch = mpu.getInterruptLatch();// 0 50 microsec pulse, 1 sta su fino a che non è valida la condizione sotto
+	lclear = mpu.getInterruptLatchClear();// 0 scende solo se vien letto il registro INT_STATUS , 1 scende per qualsiasi operaz di lettura
+	
+	intenableds = mpu.getIntEnabled(); 
+	Serial.print(logic);
+	Serial.print(F(","));
+        Serial.print(drive);
+        Serial.print(F(","));
+        Serial.print(latch);
+        Serial.print(F(","));
+        Serial.print(lclear);
+        Serial.print(F(","));
+        Serial.println(intenableds);
+        
+       mpu.setIntDataReadyEnabled(1);
+       intenableds = mpu.getIntEnabled(); 
+       Serial.println(intenableds);
+   
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
         // turn on the DMP, now that it's ready
@@ -213,6 +244,8 @@ void setup() {
         Serial.print(devStatus);
         Serial.println(F(")"));
     }
+    myservo.attach(7);
+
 }
 
 
@@ -235,9 +268,22 @@ void loop() {
         // if you are really paranoid you can frequently test in between other
         // stuff to see if mpuInterrupt is true, and if so, "break;" from the
         // while() loop to immediately process the MPU data
-
-		// for()
-		// Serial.print("blurb"); //cose per verificare se si entra nel ciclo o no. ora pare funziare
+      /*  servcount=servcount+1;
+        if(servcount = 100){
+          myservo.write(30);
+        }
+        else {
+          if(servcount = 200){
+            myservo.write(60) ;
+          }
+          else{
+           if(servcount=201){
+             servcount=0;
+           }
+          }
+        }
+		
+		 Serial.print("blurb"); //cose per verificare se si entra nel ciclo o no. ora pare funziare*/
 		digitalWrite(DEBUG_6,HIGH);    //anche questo è per vedere se entra mai in questo ciclo. se lampeggia tutto è ok.  
 	}
     digitalWrite(DEBUG_6,LOW);  
