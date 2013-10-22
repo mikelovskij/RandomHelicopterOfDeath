@@ -18,7 +18,18 @@
     #define GYRODEBUG_AGGIUSTASTRINGHE(x, y)
 	#define GYRODEBUG_ASPETTATASTO()
 	#endif
-
+	
+  #ifdef DEBUG_SERVO
+    #define DEBUG_PRINT_SERVO(x)  Serial.print (x)
+    #define DEBUG_PRINTLN_SERVO(x)  Serial.println (x)
+	#ifndef DEBUG_BEGIN(x)
+		#define DEBUG_BEGIN(x) Serial.begin(x) 
+	#endif
+  #else
+    #define DEBUG_PRINT_SERVO(x)
+    #define DEBUG_PRINTLN_SERVO(x)
+  #endif  
+  
 #ifdef DEBUG_TIMING	
 	#ifndef DEBUG_BEGIN(x)
 		#define DEBUG_BEGIN(x) Serial.begin(x) 

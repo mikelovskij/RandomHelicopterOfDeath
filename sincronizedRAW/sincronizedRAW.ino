@@ -33,6 +33,9 @@ THE SOFTWARE.
 //#include "MPU6050.h"  //inutile se c'è già incluso "MPU6050_6Axis_MotionApps20.h"
 #include "prendidati.h"
 
+#include "Servo.h"
+#include "motoreggiatore.h"
+
 
 
 
@@ -54,7 +57,8 @@ bool blinkState = false;
 void setup() {
 	DEBUG_BEGIN(115200);//inizializza la seriale. più è veloce più ciuccia risorse credo, ma in compenso perde meno tempo a trasmettere
 	setupmpu();
-	setup_myreciver(5,2);
+	setup_myreciver(5,RADIOPIN);
+	inizializza_servo(servo_pin);
 	pinMode(LED_PIN, OUTPUT);
 	delay(500);
 }
