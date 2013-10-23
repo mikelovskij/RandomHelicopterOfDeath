@@ -21,11 +21,11 @@
 /**********************************************************************DEBUG MODES E LEDS DI DEBUG**************************************************************/
 //#define DEBUG //modalità di debug inclusa nelle leibrerie dell'mpu.Se attivata racconterà sulla seriale step per step tutte le funzioni dell'mpu... non attivare a meno che non si vogliano un sacco di chiacchere in seriale.
 
-#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
-
-#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
-/**************************************************************************UCF (COLLEGAMENTO PINS)*************************************************************/
+//#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
 //#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
+//#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
+/**************************************************************************UCF (COLLEGAMENTO PINS)*************************************************************/
+
 #define LED_PIN 13
 const int servo_pin[4]={3,4,5,6};
 #define RADIOPIN 2
