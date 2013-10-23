@@ -34,7 +34,7 @@
 	#ifndef DEBUG_BEGIN(x)
 		#define DEBUG_BEGIN(x) Serial.begin(x) 
 	#endif
-	#define TIMING_PRINTLN(x) Serial.print(x)
+	#define TIMING_PRINTLN(x) Serial.println(x)
 #else
 	#define TIMING_PRINTLN(x)
 	#ifndef DEBUG_BEGIN(x) //questo va messo nell'ultimo di questi ifdef che vien chiamato, così viene fatto solo se nessun debug è chiamato.

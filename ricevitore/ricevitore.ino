@@ -33,7 +33,7 @@ THE SOFTWARE.
 //#include "MPU6050.h"  //inutile se c'è già incluso "MPU6050_6Axis_MotionApps20.h"
 #include "prendidati.h"
 
-#include "Servo.h"
+#include "ServoTimer2.h"
 #include "motoreggiatore.h"
 
 
@@ -51,7 +51,7 @@ unsigned long actual_loop; //valore attuale confrontato con prev (volendo si pu�
 
 //////////////////////////////////////////////////////////////ALTRE VARIABILI//////////////////////////////////////////////////////////////////////////////////
 bool blinkState = false;
-
+int musec[4]={0,0,0,0};
 
 ///////////////////////////////////////////////////////////SETUP///////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
@@ -64,12 +64,13 @@ void setup() {
 }
 
 void loop() {
-	actual_loop = millis();
-	if(actual_loop-prev_loop >=PERIOD){
-		TIMING_PRINTLN(actual_loop-prev_loop); 
-		prev_loop=actual_loop;    
+	//actual_loop = millis();
+	if(millis()-prev_loop >=PERIOD){
+		TIMING_PRINTLN(millis()-prev_loop); //non conta il tempo necessario a fare questo print (il che è meglio).
+		prev_loop=millis();    
 		prendidati(inputdata);
-		refresh_recived_commands();   
+		refresh_recived_commands();
+		servo_write(musec);
 		blinkState = !blinkState;
 		digitalWrite(LED_PIN, blinkState);
 	}

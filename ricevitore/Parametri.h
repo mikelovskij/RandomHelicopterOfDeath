@@ -1,5 +1,5 @@
 /**************************************************************GENERALI****************************************************************************************/
-#define PERIOD 10//periodo (in millisecondi) del loop principale. per ora il minimo effettivo è 6-7 ms ma aggiungendo cose diventerà facilmente di più.
+#define PERIOD 6//periodo (in millisecondi) del loop principale(e quindi del campionam). per ora il minimo effettivo è 2-3 ms ma aggiungendo cose diventerà facilmente di più.
 
 /**************************************************************FILTERING****************************************************************************************/
 #define FILTERING 4  //numero di elementi da includere in ogni media fatta dall'arduino
@@ -22,7 +22,7 @@
 //#define DEBUG //modalità di debug inclusa nelle leibrerie dell'mpu.Se attivata racconterà sulla seriale step per step tutte le funzioni dell'mpu... non attivare a meno che non si vogliano un sacco di chiacchere in seriale.
 
 //#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
-//#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
+#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
 //#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
 /**************************************************************************UCF (COLLEGAMENTO PINS)*************************************************************/
 
