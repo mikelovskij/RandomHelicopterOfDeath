@@ -29,3 +29,17 @@
 #define LED_PIN 13
 const int servo_pin[4]={3,4,5,6};
 #define RADIOPIN 2
+
+
+/**********************************************************************PARAMECI MANGIADIETRO**********************************************************************/
+#define smorzconst 7
+#define elasticonst 77
+#define roll_x 777
+#define becch_y 7777
+#define rotaz_z 77777
+#define deaccel_z 777777
+#define fb_smorzroll_x smorzconst*roll_x
+#define fb_elasticroll_x elasticonst*roll_x
+#define fb_smorzbecch_y smorzconst*becch_y
+#define fb_elasticbecch_y elasticonst*becch_y
+#define fb_smorzrotaz_z smorzconst*rotaz_z   
