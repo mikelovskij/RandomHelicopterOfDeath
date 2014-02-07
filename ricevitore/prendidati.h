@@ -56,29 +56,29 @@ void mobilefilter(int16_t* input,long* output, int vecchio[FILTERING][6]){
 }
 
 void azzeratore(long *filtereddata, long *azzeratdata, long *zeros){
-  
-  long zeros[6];
-  for(i=0;i<6,i++) {
+  int i;
+  for(i=0;i<6;i++) {
 	azzeratdata[i]=filtereddata[i]-zeros[i];
   }
 }
 
 void zeratore(long *filtereddata, long *azzeratdata, long *zeros, int *initcounter){
-  for(i=0;i<6,i++) {
+  int i;
+  for(i=0;i<6;i++) {
 	azzeratdata[i]=0;
 	zeros[i]=zeros[i]+filtereddata[i];
   }
   initcounter++;
 }
 ////////////////////////////////////////////////////////////////LETTURA E TRASMISSIONE DATI////////////////////////////////////////////////////////////////////
-void prendidati(long* filtereddata, int *initcounter,int *zeros){
+void prendidati(long* filtereddata){
 	accelgyro.getMotion6(&data[0], &data[1], &data[2], &data[3], &data[4], &data[5]);
 	mobilefilter(data,filtereddata, vecchio);
 	if(initcounter >= INITFILTERING){
 	  azzeratore(filtereddata, zeroeddata, zeros);
 	}
 	else{
-	  zeratore(filtereddata, zeroeddata, zeros, initcounter);
+	  zeratore(filtereddata, zeroeddata, zeros, &initcounter);
 	}
 	  
 	GYRODEBUG_TRASMETTIDATI(zeroeddata);//da mettere solo in modalità debug?

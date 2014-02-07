@@ -1,3 +1,4 @@
+/*****************************COMANDI PREPROCESSORE CHE ATTIVANO I DEBUGS SE NEL MAIN VENGONO DEFINITE LE COSE GIUSTE**************************************/
 #ifdef DEBUG_GYRODATA
 	#define GYRODEBUG_PRINT(x) Serial.print(x)
 	#define GYRODEBUG_PRINTF(x, y) Serial.print(x, y)
@@ -41,7 +42,7 @@
 		#define DEBUG_BEGIN(x)
 	#endif
 #endif
-
+/************************************************FUNZIONI DI DEBUG E TRASMISSIONE SERIALE DEI DATII*******************************************************/
 
 String aggiustastringhe (int l, String str){
 	int lgh=str.length();	
@@ -58,7 +59,7 @@ String aggiustastringhe (int l, String str){
 	return(str);
 }
 
-//(da poi spostare nella libreria debug)
+
 void trasmettidati(long* filtereddata){
 	String sax = String(filtereddata[0]);
 	String say = String(filtereddata[1]);

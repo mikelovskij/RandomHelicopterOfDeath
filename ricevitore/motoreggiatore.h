@@ -4,23 +4,18 @@
     180 gradi = 2410 microsecondi
 
 */
-Servo blervo[4];
+ServoTimer2 blervo[4];
 
 
 void inizializza_servo(const int *servo_pin/*, Servo *blervo*/){
 	for(int i; i<4; i++)
-		if(i!=3){
-			blervo[i].attach(servo_pin[i], 30 , 900); //inizializzazione dei 3 esc
-		}
-		else{
-			blervo[i].attach(servo_pin[i]);//l'ultimo servo è veramente un servo quindi useremo limiti diversi/nessun limite
-		}
+			blervo[i].attach(servo_pin[i]); //inizializzazione dei 3 esc
 }
 
-void servo_write (int *angolo/*, Servo *servo*/){
+void servo_write (int *musec/*, Servo *servo*/){
   for(int i=0; i<4; i++){
-      blervo[i].write(angolo[i]);
-      DEBUG_PRINT_SERVO(angolo[i]);
+      blervo[i].write(musec[i]);
+      DEBUG_PRINT_SERVO(musec[i]);
       DEBUG_PRINT_SERVO("\t");
     }
     DEBUG_PRINTLN_SERVO("\t");
