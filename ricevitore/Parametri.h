@@ -3,6 +3,7 @@
 
 /**************************************************************FILTERING****************************************************************************************/
 #define FILTERING 4  //numero di elementi da includere in ogni media fatta dall'arduino
+#define INITFILTERING 100 //numero di elementi (dopo che sono passati nell' iniziale filtering) usati nelle media iniziale usata per azzerare gli offsets del giroaccelerocoso
 #define DLP 6  //frequenza di taglio del digital low pass filter interno all'mpu secondo la seguente tabella
 /*
  *          |   ACCELEROMETER    |           GYROSCOPE
@@ -38,8 +39,9 @@ const int servo_pin[4]={3,4,5,6};
 #define becch_y 7777
 #define rotaz_z 77777
 #define deaccel_z 777777
-#define fb_smorzroll_x smorzconst*roll_x
+
+#define fb_smorzroll_x smorzconst*roll_x  //questa moltiplicazione, in questo modo viene fatta ogni volta che la variabile vien chiamata. ma tanto nella funzione che la usa viene usata solo una volta per variabile. quindi, siccome se inserissi questo prodotto nella funzione verrebbe effettuato ogni volta che la funz viene chiamata, non cambierebbe nulla. L'unico modo per ottimizzarle di più sarebbe fare il prodotto solo durante l'inizializzazione e poi chiamare i risultati nella funzione. potrebbe essere un'idea se sti prodotti iniziano a diventare troppi.
 #define fb_elasticroll_x elasticonst*roll_x
 #define fb_smorzbecch_y smorzconst*becch_y
 #define fb_elasticbecch_y elasticonst*becch_y
-#define fb_smorzrotaz_z smorzconst*rotaz_z   
+#define fb_smorzrotaz_z smorzconst*rotaz_z  

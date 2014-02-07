@@ -5,6 +5,10 @@ int16_t data[6]; //contiene ax,ay,az,gx,gy,gz presi (prefiltrati) dall'mpu (ak �
 long filtereddata[6]; //contiene i valori presi dal vettore "data" e filtrati da una media scorrevole
 int16_t vecchio[FILTERING][6];//registro a scorrimento che contiene gli ultimi "FILTERING" vettori acquisiti, usato per far la media passabassante.
 int mobilefilter_counter=0; //contatore (globale purtroppo) che serve alla funzione filtro.
+int initcounter=0;
+long zeroeddata[6];
+long zeros[6];
+
 
 ///////////////////////////////////////////////////////////////SETUP///////////////////////////////////////////////////////////////////////////////////////////
 void riempizeri(int vecchio[4][6]){
@@ -36,8 +40,8 @@ void setupmpu(){
 	while (Serial.available() && Serial.read()); // empty buffer again
 	GYRODEBUG_PRINT("Pronto!");
 }
-///////////////////////////////////////////////////////////////FILTRAGGIO//////////////////////////////////////////////////////////////////////////////////////
-void mobilefilter(int16_t* input,long* output, int vecchio[4][6]){
+///////////////////////////////////////////////////////////////FILTRAGGIO E AZZERAGGGIO///////////////////////////////////////////////////////////////////////////////////
+void mobilefilter(int16_t* input,long* output, int vecchio[FILTERING][6]){
 	int j;
 	for(j=0;j<6;j++){
 		output[j]=output[j]+input[j]-vecchio[mobilefilter_counter][j];
@@ -51,9 +55,31 @@ void mobilefilter(int16_t* input,long* output, int vecchio[4][6]){
 	}
 }
 
+void azzeratore(long *filtereddata, long *azzeratdata, long *zeros){
+  
+  long zeros[6];
+  for(i=0;i<6,i++) {
+	azzeratdata[i]=filtereddata[i]-zeros[i];
+  }
+}
+
+void zeratore(long *filtereddata, long *azzeratdata, long *zeros, int *initcounter){
+  for(i=0;i<6,i++) {
+	azzeratdata[i]=0;
+	zeros[i]=zeros[i]+filtereddata[i];
+  }
+  initcounter++;
+}
 ////////////////////////////////////////////////////////////////LETTURA E TRASMISSIONE DATI////////////////////////////////////////////////////////////////////
-void prendidati(long* filtereddata){
+void prendidati(long* filtereddata, int *initcounter,int *zeros){
 	accelgyro.getMotion6(&data[0], &data[1], &data[2], &data[3], &data[4], &data[5]);
 	mobilefilter(data,filtereddata, vecchio);
-	GYRODEBUG_TRASMETTIDATI(filtereddata);//da mettere solo in modalità debug?
+	if(initcounter >= INITFILTERING){
+	  azzeratore(filtereddata, zeroeddata, zeros);
+	}
+	else{
+	  zeratore(filtereddata, zeroeddata, zeros, initcounter);
+	}
+	  
+	GYRODEBUG_TRASMETTIDATI(zeroeddata);//da mettere solo in modalità debug?
 }
