@@ -25,6 +25,9 @@ void mangiadietro(long* azzeratdata, long* mangiafreedom){
 #define fb_smorzrotaz_z smorzconst*rotaz_z   
    */
   
+  
+////////al momento per l'accelerometrio g è circa = 16000-17000//////////////////////////////////
+  
   mangiafreedom[0]=filtereddata[3]*fb_smorzroll_x+filtereddata[0]*fb_elasticroll_x;
   mangiafreedom[1]=filtereddata[4]*fb_smorzbecch_y+filtereddata[1]*fb_elasticbecch_y;
   mangiafreedom[2]=filtereddata[5]*fb_smorzrotaz_z;

@@ -6,11 +6,20 @@ long filtereddata[6]; //contiene i valori presi dal vettore "data" e filtrati da
 int16_t vecchio[FILTERING][6];//registro a scorrimento che contiene gli ultimi "FILTERING" vettori acquisiti, usato per far la media passabassante.
 int mobilefilter_counter=0; //contatore (globale purtroppo) che serve alla funzione filtro.
 int initcounter=0;
-long zeroeddata[6];
+long azzeratdata[6];
 long zeros[6];
 
 
 ///////////////////////////////////////////////////////////////SETUP///////////////////////////////////////////////////////////////////////////////////////////
+void zerazeri(long zeros[6]){
+  int i;
+  for(i=0;i<6;i++){
+	zeros[i]=0;
+  }
+}
+
+
+
 void riempizeri(int vecchio[4][6]){
 	int i,j;
 	for(j=0;j<6;j++){
@@ -27,6 +36,7 @@ void setupmpu(){
 	GYRODEBUG_PRINTLN("Initializing I2C devices...");
 	accelgyro.initialize();
 	riempizeri(vecchio);
+	zerazeri(zeros);
 	// verify connection
 	GYRODEBUG_PRINTLN("Testing device connections...");
 	GYRODEBUG_PRINTLN(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
@@ -58,15 +68,24 @@ void mobilefilter(int16_t* input,long* output, int vecchio[FILTERING][6]){
 void azzeratore(long *filtereddata, long *azzeratdata, long *zeros){
   int i;
   for(i=0;i<6;i++) {
-	azzeratdata[i]=filtereddata[i]-zeros[i];
+	azzeratdata[i]=filtereddata[i]/FILTERING-zeros[i];
   }
 }
 
-void zeratore(long *filtereddata, long *azzeratdata, long *zeros, int *initcounter){
+void zeratore(long *filtereddata, long *azzeratdata, long *zeros/*, int *initcounter*/){
   int i;
   for(i=0;i<6;i++) {
 	azzeratdata[i]=0;
-	zeros[i]=zeros[i]+filtereddata[i];
+	if(initcounter >= FILTERING){
+	  zeros[i]=zeros[i]+filtereddata[i]/FILTERING;
+	}
+  }
+  initcounter++;
+}
+void mediatore(long *zeros){
+  int i;
+  for(i=0;i<6;i++) {
+	zeros[i]=zeros[i]/INITFILTERING;
   }
   initcounter++;
 }
@@ -74,12 +93,20 @@ void zeratore(long *filtereddata, long *azzeratdata, long *zeros, int *initcount
 void prendidati(long* filtereddata){
 	accelgyro.getMotion6(&data[0], &data[1], &data[2], &data[3], &data[4], &data[5]);
 	mobilefilter(data,filtereddata, vecchio);
-	if(initcounter >= INITFILTERING){
-	  azzeratore(filtereddata, zeroeddata, zeros);
+	
+	if(initcounter > (INITFILTERING+FILTERING)){
+	  azzeratore(filtereddata, azzeratdata, zeros);
 	}
-	else{
-	  zeratore(filtereddata, zeroeddata, zeros, &initcounter);
+	else{	  
+	  GYRODEBUG_PRINTLN(initcounter);
+	  GYRODEBUG_TRASMETTIDATI(zeros);
+	  GYRODEBUG_TRASMETTIDATI(filtereddata);
+	  zeratore(filtereddata, azzeratdata, zeros/*, &initcounter*/);
+	  if(initcounter==(INITFILTERING+FILTERING)){
+		mediatore(zeros);
+	  }
 	}
+
 	  
-	GYRODEBUG_TRASMETTIDATI(zeroeddata);//da mettere solo in modalità debug?
+	GYRODEBUG_TRASMETTIDATI(azzeratdata);//da mettere solo in modalità debug?
 }

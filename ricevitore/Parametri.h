@@ -3,7 +3,7 @@
 
 /**************************************************************FILTERING****************************************************************************************/
 #define FILTERING 4  //numero di elementi da includere in ogni media fatta dall'arduino
-#define INITFILTERING 100 //numero di elementi (dopo che sono passati nell' iniziale filtering) usati nelle media iniziale usata per azzerare gli offsets del giroaccelerocoso
+#define INITFILTERING 512 //numero di elementi (dopo che sono passati nell' iniziale filtering) usati nelle media iniziale usata per azzerare gli offsets del giroaccelerocoso
 #define DLP 6  //frequenza di taglio del digital low pass filter interno all'mpu secondo la seguente tabella
 /*
  *          |   ACCELEROMETER    |           GYROSCOPE
@@ -22,14 +22,14 @@
 /**********************************************************************DEBUG MODES E LEDS DI DEBUG**************************************************************/
 //#define DEBUG //modalità di debug inclusa nelle leibrerie dell'mpu.Se attivata racconterà sulla seriale step per step tutte le funzioni dell'mpu... non attivare a meno che non si vogliano un sacco di chiacchere in seriale.
 
-//#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
+#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
 //#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
 //#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
 /**************************************************************************UCF (COLLEGAMENTO PINS)*************************************************************/
 
 #define LED_PIN 13
 const int servo_pin[4]={3,4,5,6};
-#define RADIOPIN 2
+#define RADIOPIN 8
 
 
 /**********************************************************************PARAMECI MANGIADIETRO**********************************************************************/
