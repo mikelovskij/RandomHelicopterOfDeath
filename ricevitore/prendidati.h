@@ -90,7 +90,7 @@ void mediatore(long *zeros){
   initcounter++;
 }
 ////////////////////////////////////////////////////////////////LETTURA E TRASMISSIONE DATI////////////////////////////////////////////////////////////////////
-void prendidati(long* filtereddata){
+void prendidati(long* azzeratdata){
 	accelgyro.getMotion6(&data[0], &data[1], &data[2], &data[3], &data[4], &data[5]);
 	mobilefilter(data,filtereddata, vecchio);
 	

@@ -1,15 +1,11 @@
-/*  MISURE OSCOLLOSCOPIO
-      0 gradi =  550 microsecondi
-     90 gradi = 1470 microsecondi
-    180 gradi = 2410 microsecondi
 
-*/
 ServoTimer2 blervo[4];
 
 
-void inizializza_servo(const int *servo_pin/*, Servo *blervo*/){
+void inizializza_servo(const int *servo_pin/*, Servo *blervo*/, const int *servo_init){
 	for(int i; i<4; i++)
-			blervo[i].attach(servo_pin[i]); //inizializzazione dei 3 esc
+			blervo[i].attach(servo_pin[i]);
+			blervo[i].write(init[i]);
 }
 
 void servo_write (int *musec/*, Servo *servo*/){

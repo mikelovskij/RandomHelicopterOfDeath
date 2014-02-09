@@ -25,14 +25,18 @@
 #define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
 //#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
 //#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
+
+
 /**************************************************************************UCF (COLLEGAMENTO PINS)*************************************************************/
 
 #define LED_PIN 13
-const int servo_pin[4]={3,4,5,6};
+const int servo_pin[4]={3,4,5,6};//msx,mdx,mrear,servo
 #define RADIOPIN 8
+const int servo_init[4]={0,0,0,50}
 
 
 /**********************************************************************PARAMECI MANGIADIETRO**********************************************************************/
+/*######################################al momento per l'accelerometrio g è circa = 16000-17000######################################*/
 #define smorzconst 7
 #define elasticonst 77
 #define roll_x 777
@@ -40,8 +44,64 @@ const int servo_pin[4]={3,4,5,6};
 #define rotaz_z 77777
 #define deaccel_z 777777
 
+#define fb_total 1 //mettere a zero per disattivare i mangiadietro. Evitare di toccare altrimenti.
 #define fb_smorzroll_x smorzconst*roll_x  //questa moltiplicazione, in questo modo viene fatta ogni volta che la variabile vien chiamata. ma tanto nella funzione che la usa viene usata solo una volta per variabile. quindi, siccome se inserissi questo prodotto nella funzione verrebbe effettuato ogni volta che la funz viene chiamata, non cambierebbe nulla. L'unico modo per ottimizzarle di più sarebbe fare il prodotto solo durante l'inizializzazione e poi chiamare i risultati nella funzione. potrebbe essere un'idea se sti prodotti iniziano a diventare troppi.
 #define fb_elasticroll_x elasticonst*roll_x
 #define fb_smorzbecch_y smorzconst*becch_y
 #define fb_elasticbecch_y elasticonst*becch_y
 #define fb_smorzrotaz_z smorzconst*rotaz_z  
+
+/****************************************************************PARAMECI MOTORI*************************************************************************/
+//Ora i define relativi alle costanti necessarie per la conversione dalle variabili fisice
+//a quelle motore, cioè m1,m2,m3,s
+/* Per comprensione scrivo il sistema da cui siamo partiti in modo che capisci cosa significano
+   queste veriabili P.S. i nomi esosi sono chiaramente colpa di zeno per me erano 
+   
+   alpha=mc_ruota_s
+   beta=mc_ruota_retro
+   gamma=mc_beccheggio //no è il rollio cambiato in rollio_dxsx
+   mu=mc_beccheggio_s  //cambiato in                rollio_s
+   delta=mc_rollio2   //no è il                     beccheggio_dxsx 
+   epsilon=mc_rollio //cambiato in                  beccheggio_retro
+   eta=mc_sali
+   
+   wz=alpha*s+beta*m3
+   wx=gamma*(m1-m2)+mu*s
+   wy=delta*(mi+m2)+epsilon*m3
+   az=eta*(m1+m2+m3)
+*/
+
+#define mc_ruota_s 
+#define mc_ruota_retro 0
+#define mc_rollio_dxsx
+#define mc_rollio_s 
+#define mc_beccheggio_dxsx
+#define mc_beccheggio_retro 
+#define mc_sali
+//coefficienti per il singolo motore:
+/*  MISURE OSCOLLOSCOPIO
+      0 gradi =  550 microsecondi
+     90 gradi = 1470 microsecondi
+    180 gradi = 2410 microsecondi
+
+*/
+//GLI ESC DOVREBBERO LAVORARE FRA I 1200(min) e i 1800(max) MICROSECONDI. 
+/*moltiplicativi*/
+#define mc_dx
+#define mc_sx
+#define mc_r
+#define mc_s
+/*offsets*/
+#define mc_offset_dx 1200
+#define mc_offset_sx 1200
+#define mc_offset_r 1200
+#define mc_offset_s 1470
+
+/*********************************************************PARAMECI TELECOMANDORLO*********************************************************************/
+//Questi define rappresentano i coefficienti di conversione tra i valori del telecomando ricevuti e le variabili 
+//fisiche che vengono portate in giro in questa libreria, cioè omegax,omegay,omegaz,az
+#define tc__rollio 100 //visto che è +-1
+#define tc__beccheggio 0.25 //sempre se è 0-512---serve un offset per lo zero? sì altrimenti non va indietro. 
+#define tc_beccheggio_offset 256 //(per avere lo zero in posizione neutra)
+#define tc__routa 75 //visto che è +-1
+#define tc__sali 1 // se è 0-512 come ricordo. 

@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h"  //inutile se c'è già incluso "MPU6050_6Axis_MotionApps20.h"
 #include "prendidati.h"
-
+#include "conversionevariabili.h"
 #include "ServoTimer2.h"
 #include "motoreggiatore.h"
 
@@ -43,6 +43,11 @@ THE SOFTWARE.
 //////////////////////////////////////////////////////////////////DATA////////////////////////////////////////////////////////////////////////////////////////
 long inputdata[6]; //misure fatte dalla libreria che prende i dati dall'arduino e filtra e li sputa. le 6 componenti corrispondono ad ax,ay,az,gx,gy,gz
 
+double fb_data[4];//output del modulo feedback
+double tc_data[4];//output del telecomando
+double ph_data[4];//variabili fusiche
+
+int servo_data[4];//variabili servo (in microsecondi!) 
 
 //////////////////////////////////////////////////////////////////SINCRONIZZAZIONE DEL LOOP////////////////////////////////////////////////////////////////////
 unsigned long prev_loop = 0; //buffer che contiene l'ultimo valore di millis usato dal ciclo di sincronizzazione
@@ -69,7 +74,12 @@ void loop() {
 		TIMING_PRINTLN(actual_loop-prev_loop); 
 		prev_loop=actual_loop;    
 		prendidati(inputdata);
-		refresh_recived_commands();   
+		refresh_recived_commands();
+		mangiadietro(inputdata, fb_data);
+		telecomando(tc_data);
+		somma(tc_data,fb_data,ph_data);
+		converti_fisica_motori(ph_data, servo_data);
+		servo_write(servo_data);
 		blinkState = !blinkState;
 		digitalWrite(LED_PIN, blinkState);
 	}
