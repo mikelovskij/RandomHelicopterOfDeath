@@ -1,0 +1,22 @@
+http://www.youtube.com/watch?v=cj7yLk41kwY
+
+To program this controller you have to move transmitter throttle to full position.
+Now connect battery to controller.
+Wait some seconds, than you hear:
+*peep* - *short pause* - *peep*
+*pause*
+*peep*peep* - *short pause* -*peep*peep*
+*pause*
+*peep*peep*peep* - *short pause* -*peep*peep*peep*
+*pause*
+this sequence will repeat...
+
+When you want to use NIHM cells, you have to move throttle to off position when you hear the first *beep*beep*. Than you have to wait for a longer *beeep* and a short *beep*. That's all. You can disconnect battery now.
+
+When you want to select LIPO mode, start from the beginning (throttle full, connect battery, listen to the beeps)
+At the time when you hear the first single *beep* move throttle to off and wait for
+*beeep* and *beep*.
+
+When you want to switch Brake On or Off, start from the beginning, then wait for the first *peep*peep*peep* within one sequence and put throttle to off. Wait for *beeep* and *beep*.
+
+Note: When you connect battery and throttle is in off position you will hear a long *beeeep* when LIPO-mode ist selected or a short *beep* when NIMH-mode is active.
