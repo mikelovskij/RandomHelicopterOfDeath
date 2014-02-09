@@ -3,9 +3,10 @@ ServoTimer2 blervo[4];
 
 
 void inizializza_servo(const int *servo_pin/*, Servo *blervo*/, const int *servo_init){
-	for(int i; i<4; i++)
+	for(int i=0; i<4; i++){
 			blervo[i].attach(servo_pin[i]);
-			blervo[i].write(init[i]);
+			blervo[i].write(servo_init[i]);
+	}
 }
 
 void servo_write (int *musec/*, Servo *servo*/){

@@ -1,16 +1,19 @@
-#define        B_B        Joystik[0]
-#define        B_Y        Joystik[1]
-#define        B_X        Joystik[2]
-#define        B_A        Joystik[3]
+#define        B_C        Joystik[0]
+#define        B_D        Joystik[1]
+#define        B_A        Joystik[2]
+#define        B_B        Joystik[3]
 #define        B_Start    Joystik[4]
 #define        B_Select   Joystik[5]
 #define        B_Bop      Joystik[6]
 #define        End_row    Joystik[7]
 
+
+
+
 int ADDRESS_reciver;   
 bool Joystik[8];
 int B_Init;
-int B_LR;
+int B_LR=256;
 int B_UD;
 
 void setup_myreciver(int ADDRESS,int receive_pin)
@@ -37,6 +40,14 @@ void refresh_recived_commands()
   	int i_wire;
   	for (i_wire = 0; i_wire < 7; i_wire++)
   	 Joystik[i_wire]=((buf[3]>>i_wire)%2);
+	 TELECOM_PRINT(Joystik[i_wire]);
+	 TELECOM_PRINT(", ");
           }    
     }
+    
+    TELECOM_PRINT(B_LR);
+	TELECOM_PRINT(", ");
+	TELECOM_PRINT(B_UD);
+	TELECOM_PRINT("\n");
+	
 }

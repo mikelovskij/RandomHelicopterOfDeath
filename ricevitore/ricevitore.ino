@@ -26,13 +26,13 @@ THE SOFTWARE.
 #include "Wire.h"
 #include "Arduino.h"
 #include <VirtualWire.h>
-#include "Ricevitore_lib.h"
 #include "Debug.h" 
+#include "Ricevitore_lib.h"
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h"  //inutile se c'è già incluso "MPU6050_6Axis_MotionApps20.h"
 #include "prendidati.h"
-#include "conversionevariabili.h"
+#include "conversionivariabili.h"
 #include "ServoTimer2.h"
 #include "motoreggiatore.h"
 
@@ -63,7 +63,7 @@ void setup() {
 	DEBUG_BEGIN(115200);//inizializza la seriale. più è veloce più ciuccia risorse credo, ma in compenso perde meno tempo a trasmettere
 	setupmpu();
 	setup_myreciver(5,RADIOPIN);
-	inizializza_servo(servo_pin);
+	inizializza_servo(servo_pin, servo_init);
 	pinMode(LED_PIN, OUTPUT);
 	delay(500);
 }

@@ -12,7 +12,7 @@ void telecomando (/*boolean B_A, boolean B_B, boolean B_C, boolean B_D, int B_LR
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void somma (double *input_telecomando, double *input_fb, double *output){
-
+int i;
   for(i=0; i<4; i++)
     output[i]=input_telecomando[i]+fb_total*input_fb[i];
 
@@ -20,18 +20,18 @@ void somma (double *input_telecomando, double *input_fb, double *output){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void converti_fisica_motori (double *input, double *output){
+void converti_fisica_motori (double *input, int *output){
  
   double msx,mdx,mr,s,
          wx,wy,wz,az;
          
   double a=mc_ruota_s;
-         b=mc_ruota_retro;
-         c=mc_beccheggio_retro;
-         d=mc_beccheggio_dxsx;
-         e=mc_rollio_dxsx;
-         f=mc_rollio_s;
-         g=mc_sali;
+  double b=mc_ruota_retro;
+  double c=mc_beccheggio_retro;
+  double d=mc_beccheggio_dxsx;
+  double e=mc_rollio_dxsx;
+  double f=mc_rollio_s;
+  double g=mc_sali;
          
   wx=input[0];//rollio
   wy=input[1];//beccheggio
