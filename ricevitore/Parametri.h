@@ -25,12 +25,25 @@
 
 //#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
 //#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
-#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
-//#define DEBUG_TELECOM
+//#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
+#define DEBUG_TELECOM
+#define fb_total 1 //mettere a zero per disattivare i mangiadietro. Evitare di toccare altrimenti.
+#define tc_total 1 //mettere a zero per disattivare il telecomando. Evitare di toccare altrimenti.
+
+/**************************************************************************EMERGENCY PARAMETERS*************************************************************/
+
+const int EMERGENCY_DROP[4]={0,0,0,75}; //sono i valori che gli outputs del telecomando(già convertiti in dof) avranno durante l'atterraggio di emergenza
+#define ALARM_LIMIT 1000/PERIOD  //numero di cicli richiesti perchè scatti l'atterraggio di emergenza. ad esempio se period=20 e ALARM_LIMIT=50 allora serve un secondo (n.b. 1000/20=50).
+#define EMERGENCY_COOLDOWN_SPEED 10 //ogni volta che il telecomando riceve un comando valido, il punteggio di allarme retrocede di questa quantità. 
+
+
 
 /**************************************************************************UCF (COLLEGAMENTO PINS)*************************************************************/
 
 #define LED_PIN 13
+#define RED_PIN 10
+#define YELLOW_PIN 11
+#define GREEN_PIN 12
 const int servo_pin[4]={3,4,5,6};//msx,mdx,mrear,servo
 #define RADIOPIN 8
 const int servo_init[4]={1250,1250,1250,1470};
@@ -42,11 +55,10 @@ const int servo_init[4]={1250,1250,1250,1470};
 #define smorzconst 0.06
 #define elasticonst 0.015
 #define roll_x 1
-#define becch_y 1
+#define becch_y -1
 #define rotaz_z 1
 #define fb_deaccel_z 0.015
 
-#define fb_total 1 //mettere a zero per disattivare i mangiadietro. Evitare di toccare altrimenti.
 #define fb_smorzroll_x smorzconst*roll_x  //questa moltiplicazione, in questo modo viene fatta ogni volta che la variabile vien chiamata. ma tanto nella funzione che la usa viene usata solo una volta per variabile. quindi, siccome se inserissi questo prodotto nella funzione verrebbe effettuato ogni volta che la funz viene chiamata, non cambierebbe nulla. L'unico modo per ottimizzarle di più sarebbe fare il prodotto solo durante l'inizializzazione e poi chiamare i risultati nella funzione. potrebbe essere un'idea se sti prodotti iniziano a diventare troppi.
 #define fb_elasticroll_x elasticonst*roll_x
 #define fb_smorzbecch_y smorzconst*becch_y
@@ -103,7 +115,8 @@ const int servo_init[4]={1250,1250,1250,1470};
 //Questi define rappresentano i coefficienti di conversione tra i valori del telecomando ricevuti e le variabili 
 //fisiche che vengono portate in giro in questa libreria, cioè omegax,omegay,omegaz,az
 #define tc__rollio 300 //visto che è +-1
-#define tc__beccheggio 1 //sempre se è 0-512---serve un offset per lo zero? sì altrimenti non va indietro. 
-#define tc_beccheggio_offset 256 //(per avere lo zero in posizione neutra)
+#define tc__beccheggio 2 //sempre se è 0-256---serve un offset per lo zero? sì altrimenti non va indietro. 
+#define tc_beccheggio_offset 128 //(per avere lo zero in posizione neutra)
 #define tc__routa 1 //visto che è +-1
-#define tc__sali 1 // se è 0-512 come ricordo. 
+#define tc__sali 2 // se è 0-256 come ricordo. 
+

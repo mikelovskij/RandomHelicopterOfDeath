@@ -27,12 +27,14 @@ THE SOFTWARE.
 #include "Arduino.h"
 #include <VirtualWire.h>
 #include "Debug.h" 
-#include "Ricevitore_lib.h"
+
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h"  //inutile se c'è già incluso "MPU6050_6Axis_MotionApps20.h"
 #include "prendidati.h"
+#include "Ricevitore_lib.h"
 #include "conversionivariabili.h"
+#include "control.h"
 #include "ServoTimer2.h"
 #include "motoreggiatore.h"
 
@@ -64,7 +66,7 @@ void setup() {
 	setupmpu();
 	setup_myreciver(5,RADIOPIN);
 	inizializza_servo(servo_pin, servo_init);
-	pinMode(LED_PIN, OUTPUT);
+	inizializza_led();
 	delay(500);
 }
 
@@ -76,10 +78,13 @@ void loop() {
 		prendidati(inputdata);
 		refresh_recived_commands();
 		mangiadietro(inputdata, fb_data);
-		telecomando(tc_data);
+		telecomando(tc_data);		
+		emergency_drop();
+		redizziamoci();
 		somma(tc_data,fb_data,ph_data);
 		converti_fisica_motori(ph_data, servo_data);
 		servo_write(servo_data);
+		semaforo();
 		blinkState = !blinkState;
 		digitalWrite(LED_PIN, blinkState);
 	}

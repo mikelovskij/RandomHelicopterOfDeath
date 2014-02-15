@@ -12,10 +12,14 @@ void telecomando (/*boolean B_A, boolean B_B, boolean B_C, boolean B_D, int B_LR
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void somma (double *input_telecomando, double *input_fb, double *output){
-int i;
-  for(i=0; i<4; i++)
-    output[i]=input_telecomando[i]+fb_total*input_fb[i];
-
+  int i;
+  for(i=0; i<4; i++){
+	if(readyflag==2) output[i]=tc_total*input_telecomando[i]+fb_total*input_fb[i];
+	else{
+	  if(readyflag==3) output[i]=EMERGENCY_DROP[i]+fb_total*input_fb[i];
+	  else output[i]=0;
+	}
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

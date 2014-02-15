@@ -8,7 +8,7 @@ int mobilefilter_counter=0; //contatore (globale purtroppo) che serve alla funzi
 int initcounter=0;
 long azzeratdata[6];
 long zeros[6];
-
+int readyflag=0;
 
 ///////////////////////////////////////////////////////////////SETUP///////////////////////////////////////////////////////////////////////////////////////////
 void zerazeri(long zeros[6]){
@@ -103,6 +103,7 @@ void prendidati(long* azzeratdata){
 	  GYRODEBUG_TRASMETTIDATI(filtereddata);
 	  zeratore(filtereddata, azzeratdata, zeros/*, &initcounter*/);
 	  if(initcounter==(INITFILTERING+FILTERING)){
+		readyflag=1;
 		mediatore(zeros);
 	  }
 	}
