@@ -1,15 +1,15 @@
-#define        B_C        Joystick[0]
-#define        B_D        Joystick[1]
-#define        B_A        Joystick[2]
-#define        B_B        Joystick[3]
-#define        B_Start    Joystick[4]
-#define        B_Select   Joystick[5]
-#define        B_Bop      Joystick[6]
-#define        End_row    Joystick[7]
+#define        B_C        !Joystick[0]
+#define        B_D        !Joystick[1]
+#define        B_A        !Joystick[2]
+#define        B_B        !Joystick[3]
+#define        B_Start    !Joystick[4]
+#define        B_Select   !Joystick[5]
+#define        B_Bop      !Joystick[6]
+#define        End_row    !Joystick[7]
 
 
 
-int alarm_counter=0;
+long int alarm_counter=0;
 int ADDRESS_reciver;   
 bool Joystick[8];
 int B_Init;
@@ -24,6 +24,9 @@ void setup_myreciver(int ADDRESS,int receive_pin)
     vw_set_ptt_inverted(true); // Required for DR3100
     vw_setup(2000);	       // Bits per sec
     vw_rx_start();             // Start the receiver PLL running  
+	for(int i=0; i<7; i++){
+	  Joystick[i]=1;
+	}
 }
 
 void refresh_recived_commands()
@@ -41,13 +44,16 @@ void refresh_recived_commands()
            B_LR=buf[1];
            B_UD=buf[2];
 		   int i_wire;
-		   for (i_wire = 0; i_wire < 7; i_wire++)
+		   for (i_wire = 0; i_wire < 7; i_wire++){
 			  Joystick[i_wire]=((buf[3]>>i_wire)%2);
-		   TELECOM_PRINT(Joystick[i_wire]);
-		   TELECOM_PRINT(", ");
-          }
-        else if(readyflag==2 || readyflag==3) alarm_counter++;         
+			  TELECOM_PRINT(Joystick[i_wire]);
+			  TELECOM_PRINT(", ");
+		   }			 
+		  }
+		  else if(readyflag==2 || readyflag==3) alarm_counter++; 
+            
     }
+    else if(readyflag==2 || readyflag==3) alarm_counter++;     
     
     TELECOM_PRINT(B_LR);
 	TELECOM_PRINT(", ");

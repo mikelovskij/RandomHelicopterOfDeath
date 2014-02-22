@@ -81,6 +81,7 @@ void loop() {
 		telecomando(tc_data);		
 		emergency_drop();
 		redizziamoci();
+		telecomandiamoci();
 		somma(tc_data,fb_data,ph_data);
 		converti_fisica_motori(ph_data, servo_data);
 		servo_write(servo_data);
