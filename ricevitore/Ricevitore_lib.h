@@ -50,10 +50,10 @@ void refresh_recived_commands()
 			  TELECOM_PRINT(", ");
 		   }			 
 		  }
-		  else if(readyflag==2 || readyflag==3|| readyflag==4) alarm_counter++; 
+		  else if((readyflag==2 || readyflag==3||readyflag==4)&& (alarm_counter<MAX_ALARM)) alarm_counter++; 
             
     }
-    else if(readyflag==2 || readyflag==3||readyflag==4) alarm_counter++;     
+    else if((readyflag==2 || readyflag==3||readyflag==4)&& (alarm_counter<MAX_ALARM)) alarm_counter++;     
     
     TELECOM_PRINT(B_LR);
 	TELECOM_PRINT(", ");

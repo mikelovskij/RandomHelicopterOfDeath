@@ -36,7 +36,7 @@ const int EMERGENCY_DROP[4]={0,0,0,175}; //sono i valori che gli outputs del tel
 #define ALARM_LIMIT 1000/PERIOD  //numero di cicli richiesti perchè scatti l'atterraggio di emergenza. ad esempio se period=20 e ALARM_LIMIT=50 allora serve un secondo (n.b. 1000/20=50).
 #define SHUTDOWN_LIMIT 3500/PERIOD
 #define EMERGENCY_COOLDOWN_SPEED 250/PERIOD //ogni volta che il telecomando riceve un comando valido, il punteggio di allarme retrocede di questa quantità. 
-
+#define MAX_ALARM 4000/PERIOD //il contatore non supererà questo valore, in modo che un ritorno del segnale provochi un riarmo dell'elicottero in tempi decenti.
 
 
 /**************************************************************************UCF (COLLEGAMENTO PINS)*************************************************************/
