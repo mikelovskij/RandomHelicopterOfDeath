@@ -25,7 +25,7 @@
 
 //#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
 //#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
-#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
+//#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
 //#define DEBUG_TELECOM
 #define fb_total 1 //mettere a zero per disattivare i mangiadietro. Evitare di toccare altrimenti.
 //#define tc_total 1 //mettere a zero per disattivare il telecomando. Evitare di toccare altrimenti.
@@ -35,7 +35,7 @@
 const int EMERGENCY_DROP[4]={0,0,0,175}; //sono i valori che gli outputs del telecomando(già convertiti in dof) avranno durante l'atterraggio di emergenza
 #define ALARM_LIMIT 1000/PERIOD  //numero di cicli richiesti perchè scatti l'atterraggio di emergenza. ad esempio se period=20 e ALARM_LIMIT=50 allora serve un secondo (n.b. 1000/20=50).
 #define SHUTDOWN_LIMIT 3500/PERIOD
-#define EMERGENCY_COOLDOWN_SPEED 150/PERIOD //ogni volta che il telecomando riceve un comando valido, il punteggio di allarme retrocede di questa quantità. 
+#define EMERGENCY_COOLDOWN_SPEED 250/PERIOD //ogni volta che il telecomando riceve un comando valido, il punteggio di allarme retrocede di questa quantità. 
 
 
 
