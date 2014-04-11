@@ -3,7 +3,7 @@
 void telecomando (/*boolean B_A, boolean B_B, boolean B_C, boolean B_D, int B_LR, int B_UD,*/ double *output){
  
  output[0]=tc__rollio*(B_D-B_B);   //wx
- output[1]=tc__beccheggio*B_LR-tc_beccheggio_offset;    //wy
+ output[1]=tc__beccheggio*(B_LR-tc_beccheggio_offset);    //wy
  output[2]=tc__routa*(B_A-B_C);    //wz
  output[3]=tc__sali*B_UD;    //az
  

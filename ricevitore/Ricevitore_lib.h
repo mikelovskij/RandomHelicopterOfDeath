@@ -13,7 +13,7 @@ long int alarm_counter=0;
 int ADDRESS_reciver;   
 bool Joystick[8];
 int B_Init;
-int B_LR=128;
+int B_LR=133;
 int B_UD;
 
 void setup_myreciver(int ADDRESS,int receive_pin)
