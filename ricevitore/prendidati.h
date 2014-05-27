@@ -21,7 +21,7 @@ void zerazeri(long zeros[6]){
 
 
 
-void riempizeri(int vecchio[4][6]){
+void riempizeri(int vecchio[FILTERING][6]){
 	int i,j;
 	for(j=0;j<6;j++){
 		for(i=0;i<FILTERING;i++){
