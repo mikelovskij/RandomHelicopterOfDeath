@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////VARIABILI///////////////////////////////////////////////////////////////////////////////////
 MPU6050 accelgyro;//serve per la classe usata dalle librerie dell'MPU
-void mobilefilter(int16_t* input,long* output, int vecchio[4][6]);
+void mobilefilter(int16_t* input,long* output, int vecchio[FILTERING][6]);//E STA COSA COSA FA??? SEMBRA UN SACCO UN ERRORE
 int16_t data[6]; //contiene ax,ay,az,gx,gy,gz presi (prefiltrati) dall'mpu (ak è l'accelerazione lungo l'asse k e gk è la velocità angolare ATTORNO all'asse k)
 long filtereddata[6]; //contiene i valori presi dal vettore "data" e filtrati da una media scorrevole
 int16_t vecchio[FILTERING][6];//registro a scorrimento che contiene gli ultimi "FILTERING" vettori acquisiti, usato per far la media passabassante.
