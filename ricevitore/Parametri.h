@@ -3,9 +3,9 @@
 //(pare il minimo essere anche 3-4ms)
 
 /**************************************************************FILTERING****************************************************************************************/
-#define FILTERING 4  //numero di elementi da includere in ogni media fatta dall'arduino
+#define FILTERING 1  //numero di elementi da includere in ogni media fatta dall'arduino
 #define INITFILTERING 512 //numero di elementi (dopo che sono passati nell' iniziale filtering) usati nelle media iniziale usata per azzerare gli offsets del giroaccelerocoso
-#define DLP 6  //frequenza di taglio del digital low pass filter interno all'mpu secondo la seguente tabella
+#define DLP 3  //frequenza di taglio del digital low pass filter interno all'mpu secondo la seguente tabella
 /*
  *          |   ACCELEROMETER    |           GYROSCOPE
  * DLP      | Bandwidth | Delay  | Bandwidth | Delay  | Sample Rate
@@ -26,8 +26,8 @@
 //#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
 //#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
 //#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
-#define DEBUG_TELECOM
-#define fb_total 0 //mettere a zero per disattivare i mangiadietro. Evitare di toccare altrimenti.
+//#define DEBUG_TELECOM
+#define fb_total 1 //mettere a zero per disattivare i mangiadietro. Evitare di toccare altrimenti.
 //#define tc_total 1 //mettere a zero per disattivare il telecomando. Evitare di toccare altrimenti.
 
 /**************************************************************************EMERGENCY PARAMETERS*************************************************************/
@@ -53,12 +53,12 @@ const int servo_init[4]={1250,1250,1250,670};
 /**********************************************************************PARAMECI MANGIADIETRO**********************************************************************/
 /*######################################al momento per l'accelerometrio g è circa = +-16000-17000######################################*/
 //per il giroscopio dovrebbe aggirarsi sui +-4000 massimo circa, dipebnde dalla velocità di rotaz
-#define smorzconst 0.1
-#define elasticonst 0.015
+#define smorzconst 0.05
+#define elasticonst 0.001
 #define roll_x -1.5
 #define becch_y -1.5
 #define rotaz_z 0.75
-#define fb_deaccel_z 0.015
+#define fb_deaccel_z 0.0125
 
 #define fb_smorzroll_x smorzconst*roll_x  //questa moltiplicazione, in questo modo viene fatta ogni volta che la variabile vien chiamata. ma tanto nella funzione che la usa viene usata solo una volta per variabile. quindi, siccome se inserissi questo prodotto nella funzione verrebbe effettuato ogni volta che la funz viene chiamata, non cambierebbe nulla. L'unico modo per ottimizzarle di più sarebbe fare il prodotto solo durante l'inizializzazione e poi chiamare i risultati nella funzione. potrebbe essere un'idea se sti prodotti iniziano a diventare troppi.
 #define fb_elasticroll_x elasticonst*roll_x
@@ -117,20 +117,20 @@ const int servo_init[4]={1250,1250,1250,670};
 /*moltiplicativi*/
 #define mc_dx 1
 #define mc_sx 1
-#define mc_r 1.1
+#define mc_r 1.75
 #define mc_s 1
 /*offsets*/
-#define mc_offset_dx 1200
-#define mc_offset_sx 1200
-#define mc_offset_r 1200
-#define mc_offset_s 670
+#define mc_offset_dx 1335
+#define mc_offset_sx 1335
+#define mc_offset_r 1335
+#define mc_offset_s 950
 
 /*********************************************************PARAMECI TELECOMANDORLO*********************************************************************/
 //Questi define rappresentano i coefficienti di conversione tra i valori del telecomando ricevuti e le variabili 
 //fisiche che vengono portate in giro in questa libreria, cioè omegax,omegay,omegaz,az
 #define tc__rollio 300 //visto che è +-1
-#define tc__beccheggio 0.75 //sempre se è 0-256---serve un offset per lo zero? sì altrimenti non va indietro. 
+#define tc__beccheggio 0.5 //sempre se è 0-256---serve un offset per lo zero? sì altrimenti non va indietro. 
 #define tc_beccheggio_offset 133 //(per avere lo zero in posizione neutra)
 #define tc__routa 300 //visto che è +-1
-#define tc__sali 2.5 // se è 0-256 come ricordo. 
+#define tc__sali 1.65 // se è 0-256 come ricordo. 
 

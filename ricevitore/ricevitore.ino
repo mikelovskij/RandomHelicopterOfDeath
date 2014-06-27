@@ -67,7 +67,7 @@ void setup() {
 	setup_myreciver(5,RADIOPIN);
 	inizializza_servo(servo_pin, servo_init);
 	inizializza_led();
-	delay(500);
+	delay(2000);
 }
 
 void loop() {

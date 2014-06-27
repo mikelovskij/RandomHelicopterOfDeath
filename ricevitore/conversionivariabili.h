@@ -64,14 +64,19 @@ void converti_fisica_motori (double *input, int *output){
   msx=k*z+l*wy+n*wx;
   mr=k*z+m*wy+q*wz;
   s=o*wz+p*wx;
-  
+  int i;
+  if(readyflag==2||readyflag==3){
   output[0]=mc_sx*msx+mc_offset_sx;
   output[1]=mc_dx*mdx+mc_offset_dx;
   output[2]=mc_r*mr+mc_offset_r;
   output[3]=mc_s*s+mc_offset_s;
-  
-  
-  
+  }
+  else{
+	for(i=0;i<3;i++){
+	  output[i]=0;
+	 }
+   }
+	output[3]=mc_offset_s;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void mangiadietro(long* input_gyro, double *mangiafreedom){
