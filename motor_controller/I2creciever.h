@@ -6,7 +6,7 @@ void leggidati(int nbytes) {
     for(int i=0;i<4;i++){
       servo_data[i]= Wire.read() << 8;
       servo_data[i] |= Wire.read();
-      I2C_PRINTLN(dati[i]);
+      I2C_PRINTLN(servo_data[i]);
     }
   }
   else
