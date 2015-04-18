@@ -25,31 +25,15 @@ THE SOFTWARE.
 #include "Parametri.h"
 #include "Wire.h"
 #include "Arduino.h"
-#include <VirtualWire.h>
 #include "Debug.h" 
-
-#include "I2Cdev.h"
-#include "MPU6050_6Axis_MotionApps20.h"
-//#include "MPU6050.h"  //inutile se c'è già incluso "MPU6050_6Axis_MotionApps20.h"
-#include "prendidati.h"
-#include "Ricevitore_lib.h"
-#include "conversionivariabili.h"
-#include "control.h"
 //#include "ServoTimer2.h"
 //#include "motoreggiatore.h"
+#include "Servo.h"
+#include "motoreggiatorelibreriaoriginale.h"
+#include "I2creciever.h"
 
 
 
-
-
-//////////////////////////////////////////////////////////////////DATA////////////////////////////////////////////////////////////////////////////////////////
-long inputdata[6]; //misure fatte dalla libreria che prende i dati dall'arduino e filtra e li sputa. le 6 componenti corrispondono ad ax,ay,az,gx,gy,gz
-
-double fb_data[4];//output del modulo feedback
-double tc_data[4];//output del telecomando
-double ph_data[4];//variabili fusiche
-
-int servo_data[4];//variabili servo (in microsecondi!) 
 
 //////////////////////////////////////////////////////////////////SINCRONIZZAZIONE DEL LOOP////////////////////////////////////////////////////////////////////
 unsigned long prev_loop = 0; //buffer che contiene l'ultimo valore di millis usato dal ciclo di sincronizzazione
@@ -63,10 +47,9 @@ bool blinkState = false;
 ///////////////////////////////////////////////////////////SETUP///////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
 	DEBUG_BEGIN(115200);//inizializza la seriale. più è veloce più ciuccia risorse credo, ma in compenso perde meno tempo a trasmettere
-	setupmpu();
-	setup_myreciver(5,RADIOPIN);
-	//inizializza_servo(servo_pin, servo_init);
-	inizializza_led();
+	Wire.begin(motor_controller_address);
+	Wire.onReceive(leggidati);
+	inizializza_servo(servo_pin, servo_init);
 	delay(2000);
 }
 
@@ -75,18 +58,7 @@ void loop() {
 	if(actual_loop-prev_loop >=PERIOD){
 		TIMING_PRINTLN(actual_loop-prev_loop); 
 		prev_loop=actual_loop;    
-		prendidati(inputdata);
-		refresh_recived_commands();
-		mangiadietro(inputdata, fb_data);
-		telecomando(tc_data);		
-		emergency_drop();
-		redizziamoci();
-		telecomandiamoci();
-		somma(tc_data,fb_data,ph_data);
-		converti_fisica_motori(ph_data, servo_data);
-		transmit_data(servo_data);
-		//servo_write(servo_data);
-		semaforo();
+		servo_write(servo_data);
 		blinkState = !blinkState;
 		digitalWrite(LED_PIN, blinkState);
 	}

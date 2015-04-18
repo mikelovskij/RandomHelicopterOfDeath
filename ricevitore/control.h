@@ -1,5 +1,5 @@
 
-/***********************************GESTIONE LEDS*******************************************************/
+/***********************************GESTIONE LED*******************************************************/
 void inizializza_led(){
   pinMode(RED_PIN, OUTPUT);
   pinMode(YELLOW_PIN, OUTPUT);
@@ -14,7 +14,7 @@ void semaforo(){
 }
 
 
-/**********************************GESTIONE FLAGS*****************************************************/
+/**********************************GESTIONE FLAG*****************************************************/
 
 void redizziamoci(){
   static bool premiemolla;
@@ -57,3 +57,28 @@ void emergency_drop(){
 	}
   }
 }
+
+/***********************************COMUNICAZIONE FRA ARDUINI************************************/
+
+void splittaint(int *input, uint8_t* output){
+  for(int i=0;i<4;i++){
+    output[2*i] = input[i] >> 8;
+    output[2*i+1] = input[i] & 255;
+    I2C_PRINT(input[i]);
+    I2C_PRINT("\t");
+    I2C_PRINT(output[2*i]);
+    I2C_PRINT("\t");
+    I2C_PRINTLN(output[2*i+1]);
+  }
+  I2C_PRINTLN("");
+  I2C_PRINTLN("");
+}
+
+void transmit_data(int *musec){
+  uint8_t splitdata[8];
+  splittaint(musec, splitdata);
+  Wire.beginTransmission(motor_controller_address); 
+  Wire.write(splitdata, 8);             
+  Wire.endTransmission();
+}
+  
