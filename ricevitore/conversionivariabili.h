@@ -37,7 +37,7 @@ void converti_fisica_motori (double *input, int *output){
   double f=mc_sali;
   double g=mc_rollio_s;*/
   
-    double o=mc_ruota_s;
+  double o=mc_ruota_s;
   double q=mc_ruota_retro;
   double n=mc_rollio_dxsx;
   double l=mc_beccheggio_dxsx;
@@ -64,6 +64,7 @@ void converti_fisica_motori (double *input, int *output){
   msx=k*z+l*wy+n*wx;
   mr=k*z+m*wy+q*wz;
   s=o*wz+p*wx;
+  
   int i;
   if(readyflag==2||readyflag==3){
   output[0]=mc_sx*msx+mc_offset_sx;

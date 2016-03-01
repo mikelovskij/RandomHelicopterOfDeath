@@ -62,7 +62,7 @@ bool blinkState = false;
 
 ///////////////////////////////////////////////////////////SETUP///////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
-	DEBUG_BEGIN(115200);//inizializza la seriale. più è veloce più ciuccia risorse credo, ma in compenso perde meno tempo a trasmettere
+	DEBUG_BEGIN(4800);//inizializza la seriale. più è veloce più ciuccia risorse credo, ma in compenso perde meno tempo a trasmettere
 	setupmpu();
 	setup_myreciver(5,RADIOPIN);
 	//inizializza_servo(servo_pin, servo_init);

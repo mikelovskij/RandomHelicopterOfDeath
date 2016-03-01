@@ -25,9 +25,9 @@
 
 //#define DEBUG_GYRODATA //questo define abilita invece la trasmissione dei dati del gyro filtrati e di alcune info sull'inizializzazione dell'mpu compatibile con labview
 //#define DEBUG_TIMING //stampa via seriale il tempo fra un ciclo e l'altro. rallenta le trasmissioni del debug gyrodata ovviam se sono attivati assieme.
-//#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
+// #define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
 //#define DEBUG_TELECOM
-#define DEBUG_I2C // attiva il debug della comunicazione fra arduini
+//#define DEBUG_I2C // attiva il debug della comunicazione fra arduini
 #define fb_total 1 //mettere a zero per disattivare i mangiadietro. Evitare di toccare altrimenti.
 //#define tc_total 1 //mettere a zero per disattivare il telecomando. Evitare di toccare altrimenti.
 
