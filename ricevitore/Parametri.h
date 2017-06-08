@@ -28,6 +28,7 @@
 //#define DEBUG_SERVO //attiva l'output via seriale delle posizioni (teoriche) dei servo.
 //#define DEBUG_TELECOM
 #define DEBUG_I2C // attiva il debug della comunicazione fra arduini
+//#define DEBUG_CONVERSION //debug nella funzione di conversione variabili spedito via seriale
 #define fb_total 1 //mettere a zero per disattivare i mangiadietro. Evitare di toccare altrimenti.
 //#define tc_total 1 //mettere a zero per disattivare il telecomando. Evitare di toccare altrimenti.
 

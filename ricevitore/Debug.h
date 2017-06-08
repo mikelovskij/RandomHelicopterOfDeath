@@ -53,6 +53,17 @@
 	#define I2C_PRINT(x)
 #endif
 
+#ifdef DEBUG_CONVERSION	
+	#ifndef DEBUG_BEGIN(x)
+		#define DEBUG_BEGIN(x) Serial.begin(x) 
+	#endif
+	#define CONVERSION_PRINTLN(x) Serial.println(x)
+	#define CONVERSION_PRINT(x) Serial.print(x)
+#else
+	#define CONVERSION_PRINTLN(x)
+	#define CONVERSION_PRINT(x)
+#endif
+
 #ifdef DEBUG_TIMING	
 	#ifndef DEBUG_BEGIN(x)
 		#define DEBUG_BEGIN(x) Serial.begin(x) 
